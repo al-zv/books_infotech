@@ -27,6 +27,28 @@ class m260919_152054_create_book_author_table extends Migration
         // Индексы для ускорения JOIN-запросов
         $this->createIndex('idx-book_author-book_id', '{{%book_author}}', 'book_id');
         $this->createIndex('idx-book_author-author_id', '{{%book_author}}', 'author_id');
+
+        // Внешний ключ на таблицу book
+        $this->addForeignKey(
+            'fk-book_author-book_id',
+            '{{%book_author}}',
+            'book_id',
+            '{{%book}}',
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        // Внешний ключ на таблицу author
+        $this->addForeignKey(
+            'fk-book_author-author_id',
+            '{{%book_author}}',
+            'author_id',
+            '{{%author}}',
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
     }
 
     /**
@@ -34,6 +56,8 @@ class m260919_152054_create_book_author_table extends Migration
      */
     public function safeDown()
     {
+        $this->dropForeignKey('fk-book_author-author_id', '{{%book_author}}');
+        $this->dropForeignKey('fk-book_author-book_id', '{{%book_author}}');
         $this->dropTable('{{%book_author}}');
     }
 }
